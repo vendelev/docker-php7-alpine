@@ -4,5 +4,26 @@ services:
     php:
         build: .
         restart: always
+        links:
+            - memcached
+            - tarantool
         ports:
             - "9090:9000"
+        volumes:
+            - ./:/var/www:rw
+        working_dir: /var/www
+    memcached:
+        image: memcached
+        restart: always
+        mem_limit: 126MB
+        ports:
+            - "11211:11211"
+    tarantool:
+        image: tarantool/tarantool
+        restart: always
+        mem_limit: 128MB
+        ports:
+            - "11311:11311"
+        volumes:
+            - ./memcached.lua:/usr/local/etc/tarantool/instances.enabled/memcached.lua
+        command: ["tarantool", "/usr/local/etc/tarantool/instances.enabled/memcached.lua"]
