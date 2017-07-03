@@ -40,35 +40,6 @@ RUN apk add \
     && ln -s /usr/sbin/php-fpm7 /usr/bin/php-fpm \
     && ln -s /usr/lib/php7 /usr/lib/php
 
-# Install composer global bin 
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \\
-    && php composer-setup.php --install-dir=/bin --filename=composer
-
-# Install timezone and pinba
-RUN apk add tzdata \
-            git \
-            g++ \
-            gcc \
-            make \
-    && cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime \
-    && echo "${TIMEZONE}" > /etc/timezone
-
-RUN git clone https://github.com/tony2001/pinba_extension /tmp/pinba_extension \
-    && cd /tmp/pinba_extension \
-    && phpize \
-    && ./configure --enable-pinba \
-    && make install \
-    && touch $PHP_DIR/conf.d/20-pinba.ini \
-    && echo 'extension=pinba.so; pinba.enabled=1' > $PHP_DIR/conf.d/20-pinba.ini
-
 EXPOSE 9000
-
-RUN apk del tzdata \
-            git \
-            g++ \
-            gcc \
-            make \
-    && rm -fr /var/cache/apk/* \
-    && rm -fr /tmp/pinba_extension
 
 CMD ["/usr/sbin/php-fpm7", "--nodaemonize"]

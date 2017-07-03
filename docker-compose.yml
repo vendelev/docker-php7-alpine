@@ -15,15 +15,18 @@ services:
     memcached:
         image: memcached
         restart: always
-        mem_limit: 126MB
+        mem_limit: 1015MB
         ports:
             - "11211:11211"
+        command: ["memcached", "-m 1014"]
     tarantool:
         image: tarantool/tarantool
+#        image: tarantool/tarantool:1.8
         restart: always
-        mem_limit: 128MB
+        mem_limit: 1013MB
         ports:
             - "11311:11311"
         volumes:
+            - ./tarantool:/var/lib/tarantool:rw
             - ./memcached.lua:/usr/local/etc/tarantool/instances.enabled/memcached.lua
         command: ["tarantool", "/usr/local/etc/tarantool/instances.enabled/memcached.lua"]
