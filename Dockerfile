@@ -36,13 +36,11 @@ RUN apk add \
             php7-zip \
             php7-dev \
             php7-openssl \
+            php7-dom \
+            php7-tokenizer \
     && ln -s /etc/php7 /etc/php \
     && ln -s /usr/sbin/php-fpm7 /usr/bin/php-fpm \
     && ln -s /usr/lib/php7 /usr/lib/php
-
-# Install composer global bin 
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \\
-    && php composer-setup.php --install-dir=/bin --filename=composer
 
 # Install timezone and pinba
 RUN apk add tzdata \
@@ -60,6 +58,22 @@ RUN git clone https://github.com/tony2001/pinba_extension /tmp/pinba_extension \
     && make install \
     && touch $PHP_DIR/conf.d/20-pinba.ini \
     && echo 'extension=pinba.so; pinba.enabled=1' > $PHP_DIR/conf.d/20-pinba.ini
+
+WORKDIR /tmp
+
+# Install composer global bin 
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \\
+    && php composer-setup.php --install-dir=/bin --filename=composer
+
+# Install phpunit global bin
+RUN composer require "phpunit/phpunit:~6.0.6" --prefer-source --no-interaction \
+    && composer require "phpunit/php-invoker" --prefer-source --no-interaction \
+    && ln -s /tmp/vendor/bin/phpunit /usr/local/bin/phpunit \
+    && sed -i 's/nn and/nn, Julien Breux (Docker) and/g' /tmp/vendor/phpunit/phpunit/src/Runner/Version.php \
+
+    # Enable X-Debug
+    && sed -i 's/\;z/z/g' /etc/php7/conf.d/xdebug.ini \
+    && php -m | grep -i xdebug
 
 EXPOSE 9000
 
