@@ -36,6 +36,11 @@ RUN apk add \
             php7-zip \
             php7-dev \
             php7-openssl \
+            php7-redis \
+            php7-pgsql\
+            php7-intl \
+            php7-gmp \
+            php7-mongodb \
     && ln -s /etc/php7 /etc/php \
     && ln -s /usr/sbin/php-fpm7 /usr/bin/php-fpm \
     && ln -s /usr/lib/php7 /usr/lib/php
