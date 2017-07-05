@@ -36,6 +36,11 @@ RUN apk add \
             php7-zip \
             php7-dev \
             php7-openssl \
+            php7-redis \
+            php7-pgsql\
+            php7-intl \
+            php7-gmp \
+            php7-mongodb \
             php7-dom \
             php7-tokenizer \
     && ln -s /etc/php7 /etc/php \
@@ -48,6 +53,7 @@ RUN apk add tzdata \
             g++ \
             gcc \
             make \
+            re2c \
     && cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime \
     && echo "${TIMEZONE}" > /etc/timezone
 
@@ -61,7 +67,7 @@ RUN git clone https://github.com/tony2001/pinba_extension /tmp/pinba_extension \
 
 WORKDIR /tmp
 
-# Install composer global bin 
+# Install composer global bin
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \\
     && php composer-setup.php --install-dir=/bin --filename=composer
 
@@ -82,6 +88,7 @@ RUN apk del tzdata \
             g++ \
             gcc \
             make \
+            re2c \
     && rm -fr /var/cache/apk/* \
     && rm -fr /tmp/pinba_extension
 
