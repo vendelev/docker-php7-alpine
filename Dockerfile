@@ -40,7 +40,6 @@ RUN apk add \
             php7-pgsql\
             php7-intl \
             php7-gmp \
-            php7-mongodb \
             php7-dom \
             php7-tokenizer \
     && ln -s /etc/php7 /etc/php \
@@ -91,5 +90,7 @@ RUN apk del tzdata \
             re2c \
     && rm -fr /var/cache/apk/* \
     && rm -fr /tmp/pinba_extension
+
+WORKDIR /var/www/web
 
 CMD ["/usr/sbin/php-fpm7", "--nodaemonize"]
