@@ -50,6 +50,7 @@ RUN apk add tzdata \
             g++ \
             gcc \
             make \
+            re2c \
     && cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime \
     && echo "${TIMEZONE}" > /etc/timezone
 
@@ -68,6 +69,7 @@ RUN apk del tzdata \
             g++ \
             gcc \
             make \
+            re2c \
     && rm -fr /var/cache/apk/* \
     && rm -fr /tmp/pinba_extension
 
